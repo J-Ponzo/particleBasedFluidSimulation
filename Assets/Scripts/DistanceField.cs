@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class DistanceField
 {
-    private float minx = -5f;
-    private float maxx = 5f;
+    private float minx = -10f;
+    private float maxx = 10f;
     private float miny = -5f;
     private float maxy = 5f;
 
-    private int nbParticules = 1000;
+    private int nbParticules = 3000;
     private int index = 0;
     private Vector2[] savedPoses;
 

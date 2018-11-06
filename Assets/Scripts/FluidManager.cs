@@ -58,7 +58,7 @@ public class FluidManager : MonoBehaviour
             Particle particle = new Particle();
             float x = UnityEngine.Random.Range(minx + spawnDelta, maxx - spawnDelta);
             float y = UnityEngine.Random.Range(miny + spawnDelta, maxy - spawnDelta);
-            particle.index = i;
+            particle.index = -1;
             particle.pos.x = x;
             particle.pos.y = y;
             particle.posprev.x = x;

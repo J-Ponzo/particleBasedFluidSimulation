@@ -264,12 +264,12 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: minx
-      value: -5
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: maxx
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: nbParticles
-      value: 1000
+      value: 3000
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -294,7 +294,7 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: gravity.y
-      value: -0.01
+      value: -0.001
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -304,12 +304,12 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: radius
-      value: 0.4
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: p0
-      value: 30
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -324,12 +324,12 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: sigma
-      value: 500
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: beta
-      value: 500
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8ce871b54c73f0499d3d62f480573aa, type: 3}
