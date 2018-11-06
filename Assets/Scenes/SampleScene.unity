@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: nbParticles
-      value: 3000
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}

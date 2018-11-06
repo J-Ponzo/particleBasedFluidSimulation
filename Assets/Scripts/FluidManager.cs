@@ -46,6 +46,14 @@ public class FluidManager : MonoBehaviour
     [SerializeField]
     private float maxy;
 
+    private long extForcesTime;
+    private long viscosityTime;
+    private long advanceTime;
+    private long neighborsTime;
+    private long relaxTime;
+    private long collisionsTime;
+    private long updateVelTime;
+
     void Start()
     {
         float spawnDelta = 1f;
@@ -71,13 +79,47 @@ public class FluidManager : MonoBehaviour
 
     void FixedUpdate()
     {
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         ApplyExternalForces(Time.deltaTime);
+        stopwatch.Stop();
+        extForcesTime = stopwatch.ElapsedMilliseconds;
+
+        stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         ApplyViscosity(Time.deltaTime);
+        stopwatch.Stop();
+        viscosityTime = stopwatch.ElapsedMilliseconds;
+
+        stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         AdvanceParticles(Time.deltaTime);
+        stopwatch.Stop();
+        advanceTime = stopwatch.ElapsedMilliseconds;
+
+        stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         UpdateNeighbors();
+        stopwatch.Stop();
+        neighborsTime = stopwatch.ElapsedMilliseconds;
+
+        stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         DoubleDensityRelaxation(Time.deltaTime);
+        stopwatch.Stop();
+        relaxTime = stopwatch.ElapsedMilliseconds;
+
+        stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         ResolveCollisions();
+        stopwatch.Stop();
+        collisionsTime = stopwatch.ElapsedMilliseconds;
+
+        stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         UpdateVelocity(Time.deltaTime);
+        stopwatch.Stop();
+        updateVelTime = stopwatch.ElapsedMilliseconds;
     }
 
     private void ApplyExternalForces(float deltaTime)
@@ -190,7 +232,6 @@ public class FluidManager : MonoBehaviour
                 if (distance < collisionRadius)
                 {
                     Vector2 vpn = (p.pos - p.posprev) / Vector2.Distance(p.pos, p.posprev);
-                    //Vector2 vpn = p.vel; //asumption
                     Vector2 normal = distanceField.GetNormal(index);
                     Vector2 tangent = Vector2.Perpendicular(normal);
                     tangent = Time.deltaTime * friction * Vector2.Dot(vpn, tangent) * tangent;
@@ -213,21 +254,54 @@ public class FluidManager : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    //void OnDrawGizmos()
+    //{
+    //    Vector2 p1 = new Vector2(minx, miny);
+    //    Vector2 p2 = new Vector2(minx, maxy);
+    //    Vector2 p3 = new Vector2(maxx, maxy);
+    //    Vector2 p4 = new Vector2(maxx, miny);
+    //    Gizmos.DrawLine(p1, p2);
+    //    Gizmos.DrawLine(p2, p3);
+    //    Gizmos.DrawLine(p3, p4);
+    //    Gizmos.DrawLine(p4, p1);
+
+    //    foreach (Particle particle in particles)
+    //    {
+    //        Gizmos.DrawSphere(particle.pos, 0.1f);
+    //    }
+    //}
+
+    private void OnGUI()
     {
-        Vector2 p1 = new Vector2(minx, miny);
-        Vector2 p2 = new Vector2(minx, maxy);
-        Vector2 p3 = new Vector2(maxx, maxy);
-        Vector2 p4 = new Vector2(maxx, miny);
-        Gizmos.DrawLine(p1, p2);
-        Gizmos.DrawLine(p2, p3);
-        Gizmos.DrawLine(p3, p4);
-        Gizmos.DrawLine(p4, p1);
+        GUIStyle statStyle = new GUIStyle();
+        statStyle.fontSize = 30;
+        statStyle.normal.textColor = Color.white;
+        
+        float frameTime = extForcesTime + viscosityTime + advanceTime + neighborsTime + relaxTime + collisionsTime + updateVelTime;
+        float time = (float)(frameTime) / 1000f;
+        float fps = (float)Math.Round(1f / time, 2);
+        GUI.Label(new Rect(10, 10, 100, 50), "fps : " + fps, statStyle);
+        GUI.Label(new Rect(170, 10, 100, 50), "(" + time * 1000f + " ms)", statStyle);
 
-        foreach (Particle particle in particles)
-        {
-            Gizmos.DrawSphere(particle.pos, 0.1f);
-        }
+        time = (float)(extForcesTime) / 1000f;
+        GUI.Label(new Rect(10, 40, 100, 50), "apply forces (" + time * 1000f + " ms)", statStyle);
+
+        time = (float)(viscosityTime) / 1000f;
+        GUI.Label(new Rect(10, 70, 100, 50), "apply viscosity (" + time * 1000f + " ms)", statStyle);
+
+        time = (float)(advanceTime) / 1000f;
+        GUI.Label(new Rect(10, 100, 100, 50), "advance particles (" + time * 1000f + " ms)", statStyle);
+
+        time = (float)(neighborsTime) / 1000f;
+        GUI.Label(new Rect(10, 130, 100, 50), "update neighbors (" + time * 1000f + " ms)", statStyle);
+
+        time = (float)(relaxTime) / 1000f;
+        GUI.Label(new Rect(10, 160, 100, 50), "DD relax  (" + time * 1000f + " ms)", statStyle);
+
+        time = (float)(collisionsTime) / 1000f;
+        GUI.Label(new Rect(10, 190, 100, 50), "resolve collisions (" + time * 1000f + " ms)", statStyle);
+
+        time = (float)(updateVelTime) / 1000f;
+        GUI.Label(new Rect(10, 220, 100, 50), "update velocity (" + time * 1000f + " ms)", statStyle);    
     }
-
 }

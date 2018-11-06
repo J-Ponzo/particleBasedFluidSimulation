@@ -9,7 +9,7 @@ public class ASGrid
 
     private float range = 0.2f;
     private List<FluidManager.Particle>[] hashTable;
-    private int hashTableLength = 600;
+    private int hashTableLength = 10000;
 
     public ASGrid()
     {

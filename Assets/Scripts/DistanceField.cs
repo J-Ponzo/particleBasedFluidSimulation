@@ -10,7 +10,7 @@ public class DistanceField
     private float miny = -5f;
     private float maxy = 5f;
 
-    private int nbParticules = 3000;
+    private int nbParticules = 10000;
     private int index = 0;
     private Vector2[] savedPoses;
 
