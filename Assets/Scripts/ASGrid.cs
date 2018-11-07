@@ -7,37 +7,38 @@ public class ASGrid
 {
     //private FluidManager.Particle[] particles = new FluidManager.Particle[1000];
 
-    private float range = 0.2f;
-    private List<FluidManager.Particle>[] hashTable;
-    private int hashTableLength = 10000;
+    private float range = 0.5f;
+    private List<int>[] hashTable;
+    private int hashTableLength = 1023;
 
     public ASGrid()
     {
-        hashTable = new List<FluidManager.Particle>[hashTableLength];
+        hashTable = new List<int>[hashTableLength];
         for (int i = 0; i < hashTableLength; i++)
         {
-            hashTable[i] = new List<FluidManager.Particle>();
+            hashTable[i] = new List<int>();
         }
     }
 
-    public void MoveParticle(FluidManager.Particle p)
+    public void MoveParticle(ref FluidManager.Particle p)
     {
         int x = (int)((p.pos.x / range));
         int y = (int)((p.pos.y / range));
         int key = GetKey(x, y);
 
         //If p still on same cell, do nothing
-        if (key == p.index) return;
+        if (key == p.hashKey) return;
 
         //Else move p to the fine cell
-        hashTable[key].Add(p);
-        if (p.index != -1) hashTable[p.index].Remove(p);
-        p.index = key;
+        hashTable[key].Add(p.index);
+        if (p.hashKey != -1)
+            hashTable[p.hashKey].Remove(p.index);
+        p.hashKey = key;
     }
 
-    public List<FluidManager.Particle> PossibleNeighbors(FluidManager.Particle p)
+    public List<int> PossibleNeighbors(FluidManager.Particle p)
     {
-        List<FluidManager.Particle> possibleNeighbors = new List<FluidManager.Particle>();
+        List<int> possibleNeighbors = new List<int>();
 
         int x = (int)(p.pos.x / range);
         int y = (int)(p.pos.y / range);

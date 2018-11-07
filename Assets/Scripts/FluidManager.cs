@@ -22,18 +22,19 @@ public class FluidManager : MonoBehaviour
     [SerializeField]
     private Vector2 gravity;
 
-    public class Particle
+    public struct Particle
     {
         public Vector2 pos;
         public Vector2 posprev;
         public Vector2 vel;
+        public int hashKey;
         public int index;
     }
 
     [SerializeField]
     private int nbParticles;
     private List<Particle> particles;
-    private List<List<Particle>> neighbors;
+    private List<List<int>> neighbors;
     private ASGrid grid;
     private DistanceField distanceField;
 
@@ -59,14 +60,15 @@ public class FluidManager : MonoBehaviour
         float spawnDelta = 1f;
 
         particles = new List<Particle>();
-        neighbors = new List<List<Particle>>();
+        neighbors = new List<List<int>>();
         for (int i = 0; i < nbParticles; i++)
         {
-            neighbors.Add(new List<Particle>());
+            neighbors.Add(new List<int>());
             Particle particle = new Particle();
             float x = UnityEngine.Random.Range(minx + spawnDelta, maxx - spawnDelta);
             float y = UnityEngine.Random.Range(miny + spawnDelta, maxy - spawnDelta);
-            particle.index = -1;
+            particle.index = i;
+            particle.hashKey = -1;
             particle.pos.x = x;
             particle.pos.y = y;
             particle.posprev.x = x;
@@ -142,18 +144,20 @@ public class FluidManager : MonoBehaviour
     {
         for (int i = 0; i < nbParticles; i++)
         {
-            Particle p = particles[i];
-            foreach (Particle n in neighbors[i])
+            //Particle p = particles[i];
+            foreach (int indexn in neighbors[i])
             {
-                Vector2 vpn = n.pos - p.pos;
-                float velin = Vector2.Dot((p.vel - n.vel), vpn);
+                Vector2 vpn = particles[indexn].pos - particles[i].pos;
+                float velin = Vector2.Dot((particles[i].vel - particles[indexn].vel), vpn);
                 if (velin > 0)
                 {
                     float length = vpn.magnitude;
                     velin = velin / length;
                     float q = length / radius;
                     Vector2 I = 0.5f * deltaTime * (1f - q) * (sigma * velin + beta * velin * velin) * vpn;
-                    p.vel = p.vel - I;
+                    Particle p = particles[i];
+                    p.vel = particles[i].vel - I;
+                    particles[i] = p;
                 }
             }
         }
@@ -166,7 +170,7 @@ public class FluidManager : MonoBehaviour
             Particle p = particles[i];
             p.posprev = p.pos;
             p.pos += deltaTime * p.vel;
-            grid.MoveParticle(p);
+            grid.MoveParticle(ref p);
             particles[i] = p;
         }
     }
@@ -176,12 +180,13 @@ public class FluidManager : MonoBehaviour
        for (int i = 0; i < nbParticles; i++)
        {
             neighbors[i].Clear();
-            Particle p = particles[i];
-            foreach (Particle n in grid.PossibleNeighbors(p))
+            //Particle p = particles[i];
+            foreach (int indexn in grid.PossibleNeighbors(particles[i]))
             {
-                if (n != p && Vector2.Distance(p.pos, n.pos) < radius)
+                //Particle n = particles[indexn];
+                if (particles[indexn].index != particles[i].index && Vector2.Distance(particles[i].pos, particles[indexn].pos) < radius)
                 {
-                    neighbors[i].Add(n);
+                    neighbors[i].Add(indexn);
                 }
             }
        }
@@ -191,12 +196,12 @@ public class FluidManager : MonoBehaviour
     {
         for (int i = 0; i < nbParticles; i++)
         {
-            Particle part = particles[i];
+            //Particle part = particles[i];
             float p = 0f;
             float pnear = 0f;
-            foreach (Particle n in neighbors[i])
+            foreach (int indexn in neighbors[i])
             {
-                float q = 1f - Vector2.Distance(part.pos, n.pos) / radius;
+                float q = 1f - Vector2.Distance(particles[i].pos, particles[indexn].pos) / radius;
                 p += q * q;
                 pnear += q * q * q;
             }
@@ -205,15 +210,19 @@ public class FluidManager : MonoBehaviour
             float Pnear = knear * pnear;
             Vector2 delta = Vector2.zero;
 
-            foreach (Particle n in neighbors[i])
+            foreach (int indexn in neighbors[i])
             {
-                float q = 1f - Vector2.Distance(part.pos, n.pos) / radius;
-                Vector2 vpn = (part.pos - n.pos) / Vector2.Distance(part.pos, n.pos);
+                float q = 1f - Vector2.Distance(particles[i].pos, particles[indexn].pos) / radius;
+                Vector2 vpn = (particles[i].pos - particles[indexn].pos) / Vector2.Distance(particles[i].pos, particles[indexn].pos);
                 Vector2 D = 0.5f * deltaTime * deltaTime * (P * q + Pnear * q * q) * vpn;
+                Particle n = particles[indexn];
                 n.pos = n.pos + D;
+                particles[indexn] = n;
                 delta = delta - D;
             }
+            Particle part = particles[i];
             part.pos = part.pos + delta;
+            particles[i] = part;
         }
     }
 
@@ -254,22 +263,22 @@ public class FluidManager : MonoBehaviour
         }
     }
 
-    //void OnDrawGizmos()
-    //{
-    //    Vector2 p1 = new Vector2(minx, miny);
-    //    Vector2 p2 = new Vector2(minx, maxy);
-    //    Vector2 p3 = new Vector2(maxx, maxy);
-    //    Vector2 p4 = new Vector2(maxx, miny);
-    //    Gizmos.DrawLine(p1, p2);
-    //    Gizmos.DrawLine(p2, p3);
-    //    Gizmos.DrawLine(p3, p4);
-    //    Gizmos.DrawLine(p4, p1);
+    void OnDrawGizmos()
+    {
+        Vector2 p1 = new Vector2(minx, miny);
+        Vector2 p2 = new Vector2(minx, maxy);
+        Vector2 p3 = new Vector2(maxx, maxy);
+        Vector2 p4 = new Vector2(maxx, miny);
+        Gizmos.DrawLine(p1, p2);
+        Gizmos.DrawLine(p2, p3);
+        Gizmos.DrawLine(p3, p4);
+        Gizmos.DrawLine(p4, p1);
 
-    //    foreach (Particle particle in particles)
-    //    {
-    //        Gizmos.DrawSphere(particle.pos, 0.1f);
-    //    }
-    //}
+        foreach (Particle particle in particles)
+        {
+            Gizmos.DrawSphere(particle.pos, 0.1f);
+        }
+    }
 
     private void OnGUI()
     {
