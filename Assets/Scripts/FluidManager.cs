@@ -7,6 +7,7 @@ public class FluidManager : MonoBehaviour
 {
     [SerializeField]
     private float radius;
+    private float sqrRadius;
     [SerializeField]
     private float collisionRadius;
     [SerializeField]
@@ -77,6 +78,7 @@ public class FluidManager : MonoBehaviour
         }
         grid = new ASGrid();
         distanceField = new DistanceField();
+        sqrRadius = radius * radius;
     }
 
     void FixedUpdate()
@@ -184,8 +186,9 @@ public class FluidManager : MonoBehaviour
             foreach (int indexn in grid.PossibleNeighbors(particles[i]))
             {
                 //Particle n = particles[indexn];
-                if (particles[indexn].index != particles[i].index && Vector2.Distance(particles[i].pos, particles[indexn].pos) < radius)
-                {
+                //if (particles[indexn].index != particles[i].index && Vector2.Distance(particles[i].pos, particles[indexn].pos) < radius)
+                if (particles[indexn].index != particles[i].index && (particles[indexn].pos - particles[i].pos).sqrMagnitude < sqrRadius)
+                    {
                     neighbors[i].Add(indexn);
                 }
             }
