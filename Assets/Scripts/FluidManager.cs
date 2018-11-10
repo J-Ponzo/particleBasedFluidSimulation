@@ -34,8 +34,8 @@ public class FluidManager : MonoBehaviour
 
     [SerializeField]
     private int nbParticles;
-    private List<Particle> particles;
-    private List<List<int>> neighbors;
+    private List<Particle> particles = new List<Particle>();
+    private List<List<int>> neighbors = new List<List<int>>();
     private ASGrid grid;
     private DistanceField distanceField;
 
@@ -60,8 +60,6 @@ public class FluidManager : MonoBehaviour
     {
         float spawnDelta = 1f;
 
-        particles = new List<Particle>();
-        neighbors = new List<List<int>>();
         for (int i = 0; i < nbParticles; i++)
         {
             neighbors.Add(new List<int>());
