@@ -3,23 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DistanceField
+[System.Serializable]
+public class ComputedDistanceField : ADistanceField
 {
-    private float minx = -16f;
-    private float maxx = 16f;
-    private float miny = -16f;
-    private float maxy = 16f;
-
-    private int nbParticules = 10000;
+    private int nbParticules = 1024;
     private int index = 0;
     private Vector2[] savedPoses;
 
-    public DistanceField()
+    public ComputedDistanceField(DistanceField_Data data)
     {
+        base.data = data;
         savedPoses = new Vector2[nbParticules];
     }
 
-    public int GetIndex(Vector2 pos)
+    public override int GetIndex(Vector2 pos)
     {
         savedPoses[index] = pos;
         int savedIndex = index;
@@ -27,13 +24,13 @@ public class DistanceField
         return savedIndex;
     }
 
-    public float GetDistance(int index)
+    public override float GetDistance(int index)
     {
         Vector2 pos = savedPoses[index];
-        float topDist = maxy - pos.y;
-        float bottomDist = pos.y - miny;
-        float rightDist = maxx - pos.x;
-        float leftDist = pos.x - minx;
+        float topDist = base.data.upBound - pos.y;
+        float bottomDist = pos.y - base.data.downBound;
+        float rightDist = base.data.rightBound - pos.x;
+        float leftDist = pos.x - base.data.leftBound;
 
         float dist = topDist;
         if (bottomDist < dist)
@@ -52,13 +49,13 @@ public class DistanceField
         return dist;
     }
 
-    public Vector2 GetNormal(int index)
+    public override Vector2 GetNormal(int index)
     {
         Vector2 pos = savedPoses[index];
-        float topDist = maxy - pos.y;
-        float bottomDist = pos.y - miny;
-        float rightDist = maxx - pos.x;
-        float leftDist = pos.x - minx;
+        float topDist = base.data.upBound - pos.y;
+        float bottomDist = pos.y - base.data.downBound;
+        float rightDist = base.data.rightBound - pos.x;
+        float leftDist = pos.x - base.data.leftBound;
         float dist = topDist;
         if (bottomDist < dist)
         {

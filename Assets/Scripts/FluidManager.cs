@@ -36,8 +36,13 @@ public class FluidManager : MonoBehaviour
     private int nbParticles;
     private List<Particle> particles = new List<Particle>();
     private List<List<int>> neighbors = new List<List<int>>();
+
+
     private ASGrid grid;
-    private DistanceField distanceField;
+
+    [SerializeField]
+    private DistanceField_Data distanceFieldData;
+    private ADistanceField distanceField;
 
     [SerializeField]
     private float minx;
@@ -75,7 +80,7 @@ public class FluidManager : MonoBehaviour
             particles.Add(particle);
         }
         grid = new ASGrid();
-        distanceField = new DistanceField();
+        distanceField = new BakedDistanceField(distanceFieldData);
         sqrRadius = radius * radius;
     }
 
@@ -144,7 +149,6 @@ public class FluidManager : MonoBehaviour
     {
         for (int i = 0; i < nbParticles; i++)
         {
-            //Particle p = particles[i];
             foreach (int indexn in neighbors[i])
             {
                 Vector2 vpn = particles[indexn].pos - particles[i].pos;

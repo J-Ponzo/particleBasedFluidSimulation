@@ -2084,7 +2084,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989148918}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.25, y: 0.5, z: 0}
+  m_LocalPosition: {x: 10.25, y: 0.5, z: 0}
   m_LocalScale: {x: 2, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 828934935}
@@ -3738,7 +3738,7 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: nbParticles
-      value: 1024
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -3748,7 +3748,7 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: gravity.y
-      value: 0
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -3758,7 +3758,7 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: radius
-      value: 0.5
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -3785,5 +3785,11 @@ PrefabInstance:
       propertyPath: beta
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: distanceFieldData
+      value: 
+      objectReference: {fileID: 11400000, guid: 7d6cd69b22cb1ec46811ab1529ed5962,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8ce871b54c73f0499d3d62f480573aa, type: 3}

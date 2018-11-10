@@ -7,7 +7,7 @@ public class ASGrid
 {
     //private FluidManager.Particle[] particles = new FluidManager.Particle[1000];
 
-    private float range = 0.5f;
+    private float range = 0.2f;
     private List<int>[] hashTable;
     private int hashTableLength = 1023;
 
