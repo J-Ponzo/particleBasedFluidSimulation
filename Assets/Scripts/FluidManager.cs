@@ -156,6 +156,8 @@ public class FluidManager : MonoBehaviour
                 if (velin > 0)
                 {
                     float length = vpn.magnitude;
+                    // TODO remove this debug log
+                    if (length < 0.0001f) Debug.LogWarning("ApplyViscosity : vpn is null vector");
                     velin = velin / length;
                     float q = length / radius;
                     Vector2 I = 0.5f * deltaTime * (1f - q) * (sigma * velin + beta * velin * velin) * vpn;
@@ -184,11 +186,8 @@ public class FluidManager : MonoBehaviour
        for (int i = 0; i < nbParticles; i++)
        {
             neighbors[i].Clear();
-            //Particle p = particles[i];
             foreach (int indexn in grid.PossibleNeighbors(particles[i]))
             {
-                //Particle n = particles[indexn];
-                //if (particles[indexn].index != particles[i].index && Vector2.Distance(particles[i].pos, particles[indexn].pos) < radius)
                 if (particles[indexn].index != particles[i].index && (particles[indexn].pos - particles[i].pos).sqrMagnitude < sqrRadius)
                     {
                     neighbors[i].Add(indexn);
@@ -218,6 +217,11 @@ public class FluidManager : MonoBehaviour
             foreach (int indexn in neighbors[i])
             {
                 float q = 1f - Vector2.Distance(particles[i].pos, particles[indexn].pos) / radius;
+                // TODO remove this debug log
+                if (Vector2.Distance(particles[i].pos, particles[indexn].pos) < 0.0001f)
+                {
+                    Debug.LogWarning("DoubleDensityRelaxation : divid by zero");
+                }
                 Vector2 vpn = (particles[i].pos - particles[indexn].pos) / Vector2.Distance(particles[i].pos, particles[indexn].pos);
                 Vector2 D = 0.5f * deltaTime * deltaTime * (P * q + Pnear * q * q) * vpn;
                 Particle n = particles[indexn];
@@ -240,17 +244,19 @@ public class FluidManager : MonoBehaviour
         {
             Particle p = particles[i];
             int index = distanceField.GetIndex(p.pos);
-            if (index != -1)
+            if (index > -1)
             {
                 float distance = distanceField.GetDistance(index);
                 if (distance < collisionRadius)
                 {
+                    // TODO remove this debug log
+                    if (Vector2.Distance(p.pos, p.posprev) < 0.0001f) Debug.LogWarning("ResolveCollisions : divid by zero");
                     Vector2 vpn = (p.pos - p.posprev) / Vector2.Distance(p.pos, p.posprev);
                     Vector2 normal = distanceField.GetNormal(index);
                     Vector2 tangent = Vector2.Perpendicular(normal);
                     tangent = Time.deltaTime * friction * Vector2.Dot(vpn, tangent) * tangent;
                     p.pos = p.pos - tangent;
-                    p.pos = p.pos - collisionSoftness * (distance + radius) * normal;
+                    p.pos = p.pos - collisionSoftness * (distance + collisionRadius) * normal;
 
                     particles[i] = p;
                 }
