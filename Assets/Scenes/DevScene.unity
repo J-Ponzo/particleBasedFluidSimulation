@@ -3738,7 +3738,7 @@ PrefabInstance:
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: nbParticles
-      value: 1500
+      value: 4096
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -3791,5 +3791,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 7d6cd69b22cb1ec46811ab1529ed5962,
         type: 2}
+    - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: fluidData
+      value: 
+      objectReference: {fileID: 11400000, guid: 0cc4e82013a21e54b82c5d56a84def86,
+        type: 2}
+    - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: minSpeed
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8ce871b54c73f0499d3d62f480573aa, type: 3}

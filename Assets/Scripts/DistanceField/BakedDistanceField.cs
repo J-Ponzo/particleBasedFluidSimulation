@@ -31,11 +31,23 @@ public class BakedDistanceField : ADistanceField
         int x = (int) ((pos.x - base.data.leftBound + halfSampleSize) / sampleSize);
         int y = (int) ((pos.y - base.data.downBound + halfSampleSize) / sampleSize);
 
-        return x * nbSamplesY + y;
+        //return x * nbSamplesY + y;
+        // TODO remove this debug log
+        int index = x * nbSamplesY + y;
+        if (index >= data.samples.Length || index < 0)
+        {
+            Debug.LogError("index not existing");
+        }
+        return index;
     }
 
     public override float GetDistance(int index)
     {
+        // TODO remove this debug log
+        if (index >= data.samples.Length || index < 0)
+        {
+            Debug.LogError("index not existing");
+        }
         return data.samples[index].z;
     }
 

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 366c712d9f7dec04ea6e03a0206753a4, type: 3}
+  m_Name: DefaultFluid_Data
+  m_EditorClassIdentifier: 
+  radius: 0.3
+  collisionRadius: 0.3
+  p0: 10
+  sigma: 30
+  beta: 50
+  k: 0.4
+  knear: 0.2

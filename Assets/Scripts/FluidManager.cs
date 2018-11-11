@@ -5,23 +5,11 @@ using UnityEngine;
 
 public class FluidManager : MonoBehaviour
 {
-    [SerializeField]
-    private float radius;
     private float sqrRadius;
     [SerializeField]
-    private float collisionRadius;
-    [SerializeField]
-    private float p0;
-    [SerializeField]
-    private float sigma;
-    [SerializeField]
-    private float beta;
-    [SerializeField]
-    private float k;
-    [SerializeField]
-    private float knear;
-    [SerializeField]
     private Vector2 gravity;
+    [SerializeField]
+    private float maxSpeed;
 
     public struct Particle
     {
@@ -39,6 +27,9 @@ public class FluidManager : MonoBehaviour
 
 
     private ASGrid grid;
+
+    [SerializeField]
+    private Fluid_Data fluidData;
 
     [SerializeField]
     private DistanceField_Data distanceFieldData;
@@ -81,7 +72,7 @@ public class FluidManager : MonoBehaviour
         }
         grid = new ASGrid();
         distanceField = new BakedDistanceField(distanceFieldData);
-        sqrRadius = radius * radius;
+        sqrRadius = fluidData.radius * fluidData.radius;
     }
 
     void FixedUpdate()
@@ -159,8 +150,8 @@ public class FluidManager : MonoBehaviour
                     // TODO remove this debug log
                     if (length < 0.0001f) Debug.LogWarning("ApplyViscosity : vpn is null vector");
                     velin = velin / length;
-                    float q = length / radius;
-                    Vector2 I = 0.5f * deltaTime * (1f - q) * (sigma * velin + beta * velin * velin) * vpn;
+                    float q = length / fluidData.radius;
+                    Vector2 I = 0.5f * deltaTime * (1f - q) * (fluidData.sigma * velin + fluidData.beta * velin * velin) * vpn;
                     Particle p = particles[i];
                     p.vel = particles[i].vel - I;
                     particles[i] = p;
@@ -175,6 +166,10 @@ public class FluidManager : MonoBehaviour
         {
             Particle p = particles[i];
             p.posprev = p.pos;
+            if (p.vel.magnitude > maxSpeed)
+            {
+                p.vel = p.vel.normalized * maxSpeed;
+            }
             p.pos += deltaTime * p.vel;
             grid.MoveParticle(ref p);
             particles[i] = p;
@@ -200,23 +195,22 @@ public class FluidManager : MonoBehaviour
     {
         for (int i = 0; i < nbParticles; i++)
         {
-            //Particle part = particles[i];
             float p = 0f;
             float pnear = 0f;
             foreach (int indexn in neighbors[i])
             {
-                float q = 1f - Vector2.Distance(particles[i].pos, particles[indexn].pos) / radius;
+                float q = 1f - Vector2.Distance(particles[i].pos, particles[indexn].pos) / fluidData.radius;
                 p += q * q;
                 pnear += q * q * q;
             }
 
-            float P = k * (p - p0);
-            float Pnear = knear * pnear;
+            float P = fluidData.k * (p - fluidData.p0);
+            float Pnear = fluidData.knear * pnear;
             Vector2 delta = Vector2.zero;
 
             foreach (int indexn in neighbors[i])
             {
-                float q = 1f - Vector2.Distance(particles[i].pos, particles[indexn].pos) / radius;
+                float q = 1f - Vector2.Distance(particles[i].pos, particles[indexn].pos) / fluidData.radius;
                 // TODO remove this debug log
                 if (Vector2.Distance(particles[i].pos, particles[indexn].pos) < 0.0001f)
                 {
@@ -237,8 +231,8 @@ public class FluidManager : MonoBehaviour
 
     private void ResolveCollisions()
     {
-        float friction = 0.03f;
-        float collisionSoftness = 0.02f;
+        float friction = 0.02f;
+        float collisionSoftness = 0.1f;
 
         for (int i = 0; i < nbParticles; i++)
         {
@@ -247,16 +241,16 @@ public class FluidManager : MonoBehaviour
             if (index > -1)
             {
                 float distance = distanceField.GetDistance(index);
-                if (distance < collisionRadius)
+                if (distance < fluidData.collisionRadius)
                 {
                     // TODO remove this debug log
-                    if (Vector2.Distance(p.pos, p.posprev) < 0.0001f) Debug.LogWarning("ResolveCollisions : divid by zero");
+                    if (Vector2.Distance(p.pos, p.posprev) < 0.0001f) Debug.LogWarning(p.index + " : ResolveCollisions : divid by zero");
                     Vector2 vpn = (p.pos - p.posprev) / Vector2.Distance(p.pos, p.posprev);
-                    Vector2 normal = distanceField.GetNormal(index);
+                    Vector2 normal = distanceField.GetNormal(index).normalized;
                     Vector2 tangent = Vector2.Perpendicular(normal);
                     tangent = Time.deltaTime * friction * Vector2.Dot(vpn, tangent) * tangent;
                     p.pos = p.pos - tangent;
-                    p.pos = p.pos - collisionSoftness * (distance + collisionRadius) * normal;
+                    p.pos = p.pos - collisionSoftness * (distance + fluidData.collisionRadius) * normal;
 
                     particles[i] = p;
                 }
@@ -270,6 +264,10 @@ public class FluidManager : MonoBehaviour
         {
             Particle p = particles[i];
             p.vel = (p.pos - p.posprev) / deltaTime;
+            if (p.vel.magnitude > maxSpeed)
+            {
+                p.vel = p.vel.normalized * maxSpeed;
+            }
             particles[i] = p;
         }
     }
@@ -287,7 +285,7 @@ public class FluidManager : MonoBehaviour
 
         foreach (Particle particle in particles)
         {
-            Gizmos.DrawSphere(particle.pos, 0.1f);
+            Gizmos.DrawSphere(particle.pos, 0.05f);
         }
     }
 
