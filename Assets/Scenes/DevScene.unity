@@ -3807,5 +3807,30 @@ PrefabInstance:
       propertyPath: minSpeed
       value: 0.01
       objectReference: {fileID: 0}
+    - target: {fileID: 1291892385449829349, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291892385449829349, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291892385449829349, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291892385449829349, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: particleRenderSize
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8ce871b54c73f0499d3d62f480573aa, type: 3}

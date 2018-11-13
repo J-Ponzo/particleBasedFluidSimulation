@@ -25,7 +25,6 @@ public class FluidManager : MonoBehaviour
     private List<Particle> particles = new List<Particle>();
     private List<List<int>> neighbors = new List<List<int>>();
 
-
     private ASGrid grid;
 
     [SerializeField]
@@ -52,6 +51,10 @@ public class FluidManager : MonoBehaviour
     private long collisionsTime;
     private long updateVelTime;
 
+    private MeshFilter meshFilter;
+    [SerializeField]
+    private float particleRenderSize;
+
     void Start()
     {
         float spawnDelta = 1f;
@@ -73,6 +76,71 @@ public class FluidManager : MonoBehaviour
         grid = new ASGrid();
         distanceField = new BakedDistanceField(distanceFieldData);
         sqrRadius = fluidData.radius * fluidData.radius;
+
+        InitMesh();
+    }
+
+    private void InitMesh()
+    {
+        Mesh mesh = new Mesh();
+        meshFilter = GetComponent<MeshFilter>();
+        meshFilter.mesh = mesh;
+        meshFilter.mesh.name = "ParticlesMesh";
+        meshFilter.mesh.vertices = new Vector3[nbParticles * 4];
+        meshFilter.mesh.uv = new Vector2[nbParticles * 4];
+        meshFilter.mesh.triangles = new int[nbParticles * 6];
+        UpdateMesh();
+    }
+
+    private void UpdateMesh()
+    {
+        Vector3[] vertices = meshFilter.mesh.vertices;
+        Vector2[] uv = meshFilter.mesh.uv;
+        int[] triangles = meshFilter.mesh.triangles;
+
+        float offset = particleRenderSize / 2f;
+        Vector3 offset00 = new Vector3(-offset, -offset, 0f);
+        Vector3 offset10 = new Vector3(offset, -offset, 0f);
+        Vector3 offset11 = new Vector3(offset, offset, 0f);
+        Vector3 offset01 = new Vector3(-offset, offset, 0f);
+        Vector2 particle2d;
+        Vector3 particle3d = Vector3.zero;
+        Vector2 uv00 = new Vector2(0f, 0f);
+        Vector2 uv10 = new Vector2(1f, 0f);
+        Vector2 uv11 = new Vector2(1f, 1f);
+        Vector2 uv01 = new Vector2(0f, 1f);
+        for (int i = 0; i < nbParticles; i++)
+        {
+            particle2d = particles[i].pos;
+            particle3d.x = particle2d.x;
+            particle3d.y = particle2d.y;
+
+            vertices[i * 4 + 0] = particle3d + offset00;
+            vertices[i * 4 + 1] = particle3d + offset10;
+            vertices[i * 4 + 2] = particle3d + offset11;
+            vertices[i * 4 + 3] = particle3d + offset01;
+
+            uv[i * 4 + 0] = uv00;
+            uv[i * 4 + 1] = uv10;
+            uv[i * 4 + 2] = uv11;
+            uv[i * 4 + 3] = uv01;
+
+            triangles[i * 6 + 0] = i * 4 + 0;
+            triangles[i * 6 + 1] = i * 4 + 2;
+            triangles[i * 6 + 2] = i * 4 + 1;
+            triangles[i * 6 + 3] = i * 4 + 0;
+            triangles[i * 6 + 4] = i * 4 + 3;
+            triangles[i * 6 + 5] = i * 4 + 2;
+        }
+
+        meshFilter.mesh.vertices = vertices;
+        meshFilter.mesh.uv = uv;
+        meshFilter.mesh.triangles = triangles;
+    }
+
+    void Update()
+    {
+        UpdateMesh();   
     }
 
     void FixedUpdate()
@@ -118,6 +186,17 @@ public class FluidManager : MonoBehaviour
         UpdateVelocity(Time.deltaTime);
         stopwatch.Stop();
         updateVelTime = stopwatch.ElapsedMilliseconds;
+
+        Render();
+    }
+
+    private void Render()
+    {
+        MeshRenderer renderer = GetComponent<MeshRenderer>();
+        Material material = renderer.sharedMaterial;
+        Vector4[] sentParticles = new Vector4[] { particles[0].pos, new Vector4(3, 3, 0, 0) };
+        material.SetVectorArray("_Particles", sentParticles);
+        material.SetInt("_NbParts", sentParticles.Length);
     }
 
     private void ApplyExternalForces(float deltaTime)
@@ -184,7 +263,7 @@ public class FluidManager : MonoBehaviour
             foreach (int indexn in grid.PossibleNeighbors(particles[i]))
             {
                 if (particles[indexn].index != particles[i].index && (particles[indexn].pos - particles[i].pos).sqrMagnitude < sqrRadius)
-                    {
+                {
                     neighbors[i].Add(indexn);
                 }
             }
@@ -286,6 +365,7 @@ public class FluidManager : MonoBehaviour
         foreach (Particle particle in particles)
         {
             Gizmos.DrawSphere(particle.pos, 0.05f);
+            //Gizmos.DrawCube(particle.pos, 0.1f * Vector3.one);
         }
     }
 
