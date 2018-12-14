@@ -3655,6 +3655,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5575815164531434362, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: m_Name
+      value: FluidManager
+      objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434356, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3709,11 +3714,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5575815164531434362, guid: f8ce871b54c73f0499d3d62f480573aa,
-        type: 3}
-      propertyPath: m_Name
-      value: FluidManager
       objectReference: {fileID: 0}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -3789,7 +3789,7 @@ PrefabInstance:
         type: 3}
       propertyPath: distanceFieldData
       value: 
-      objectReference: {fileID: 11400000, guid: 7d6cd69b22cb1ec46811ab1529ed5962,
+      objectReference: {fileID: 11400000, guid: c70d05c47d494754b88de45eba22d51c,
         type: 2}
     - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -3806,6 +3806,11 @@ PrefabInstance:
         type: 3}
       propertyPath: minSpeed
       value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
+        type: 3}
+      propertyPath: particleRenderSize
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1291892385449829349, guid: f8ce871b54c73f0499d3d62f480573aa,
         type: 3}
@@ -3827,10 +3832,5 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 5575815164531434357, guid: f8ce871b54c73f0499d3d62f480573aa,
-        type: 3}
-      propertyPath: particleRenderSize
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8ce871b54c73f0499d3d62f480573aa, type: 3}

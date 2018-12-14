@@ -43,9 +43,11 @@ public class DistanceField_Data : ScriptableObject
         }
 
         //Save samples
+#if UNITY_EDITOR
         AssetDatabase.Refresh();
         EditorUtility.SetDirty(this);
         AssetDatabase.SaveAssets();
+#endif
 
         Debug.Log("Baking Complete !");
     }

@@ -41,3 +41,12 @@ The following packages were added:
   com.unity.modules.vr@1.0.0
   com.unity.modules.wind@1.0.0
   com.unity.modules.xr@1.0.0
+
+=== Sun Nov 25 17:11:29 2018
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.analytics from version 3.0.9 to 3.2.2
+  com.unity.package-manager-ui from version 2.0.2 to 2.0.3
